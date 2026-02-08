@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Home, Brain, TrendingUp, User, MessageCircle, Target } from 'lucide-react';
+import { Home, Brain, TrendingUp, User, Target } from 'lucide-react';
 import HamburgerMenu from './HamburgerMenu';
 
 // Função para verificar autenticação
@@ -19,7 +19,7 @@ const checkAuthentication = (): boolean => {
     if (email === 'app.pigman@gmail.com' && password === '#PIGMAN123') {
       return true;
     }
-  } catch (error) {
+  } catch {
     return false;
   }
 

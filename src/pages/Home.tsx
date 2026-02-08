@@ -15,7 +15,7 @@ interface HomeProps {
 }
 
 export default function Home({ onNavigate }: HomeProps) {
-  const { balance, real, predicted, pigMan, pendingExpenses, expensesByCategory } = dashboardData;
+  const { real, predicted, pigMan, pendingExpenses, expensesByCategory } = dashboardData;
   
   const totalCardsLimit = creditCardsData.reduce((sum, card) => sum + card.limit, 0);
   const totalCardsUsed = creditCardsData.reduce((sum, card) => sum + card.used, 0);

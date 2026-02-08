@@ -31,7 +31,7 @@ const checkAuthentication = (): boolean => {
     if (email === 'app.pigman@gmail.com' && password === '#PIGMAN123') {
       return true;
     }
-  } catch (error) {
+  } catch {
     // Token inválido
     return false;
   }

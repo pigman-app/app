@@ -25,7 +25,9 @@ export default function Missions() {
   const filteredMissions = getFilteredMissions();
   const dailyMissions = filteredMissions.filter(m => m.type === 'daily');
   const weeklyMissions = filteredMissions.filter(m => m.type === 'weekly');
-  const monthlyMissions = filteredMissions.filter(m => m.type === 'monthly');
+  // Filtrar mensais - como o tipo Mission não inclui 'monthly', este array sempre será vazio
+  // mas mantemos para quando o tipo for expandido no futuro
+  const monthlyMissions = filteredMissions.filter(m => (m.type as string) === 'monthly');
   const achievementMissions = filteredMissions.filter(m => m.type === 'achievement');
 
   const completedMissions = gamificationData.missions.filter(m => m.completed);
