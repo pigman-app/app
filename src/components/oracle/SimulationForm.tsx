@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Target, Sparkles, CheckCircle, Calendar, ArrowRight } from 'lucide-react';
+import { Target, Sparkles, CheckCircle, Calendar, ArrowRight, X, RefreshCw } from 'lucide-react';
 import { SimulationGoal } from '../../mocks/strategy';
 
 interface SimulationFormProps {
   onSimulate?: (goal: SimulationGoal) => void;
-  onCreateDream?: (goal: SimulationGoal) => void;
+  onCreateDream?: (goal: SimulationGoal, observations?: string) => void;
 }
 
 export default function SimulationForm({ onSimulate, onCreateDream }: SimulationFormProps) {
@@ -13,6 +13,8 @@ export default function SimulationForm({ onSimulate, onCreateDream }: Simulation
   const [targetAmount, setTargetAmount] = useState(25000);
   const [deadline, setDeadline] = useState(12);
   const [showResult, setShowResult] = useState(false);
+  const [showCreateTrailModal, setShowCreateTrailModal] = useState(false);
+  const [observations, setObservations] = useState('');
 
   const calculateSavings = () => {
     return targetAmount / deadline;
@@ -234,44 +236,30 @@ export default function SimulationForm({ onSimulate, onCreateDream }: Simulation
               ))}
             </div>
 
+            {/* Campo de Observações */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Observações para a IA (opcional)
+              </label>
+              <textarea
+                value={observations}
+                onChange={(e) => setObservations(e.target.value)}
+                placeholder="Ex: Não posso reduzir tanto com essa categoria de transporte"
+                rows={3}
+                className="w-full px-4 py-3 rounded-card border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-pink focus:border-transparent resize-none"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Informe ajustes ou restrições que a IA deve considerar ao criar sua trilha
+              </p>
+            </div>
+
             {/* Botão Criar Trilha */}
             {onCreateDream && (
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
-                  const simulation: SimulationGoal = {
-                    id: Date.now().toString(),
-                    title: goalTitle,
-                    targetAmount,
-                    deadline,
-                    monthlySavings: calculateSavings(),
-                    insights: [
-                      `Comandante, se reduzirmos 15% do Lazer, antecipamos sua meta em 2 meses.`,
-                      `Com o seu fluxo atual, você pode atingir este objetivo em ${deadline} meses.`,
-                    ],
-                    suggestedCuts: [
-                      {
-                        category: 'Lazer',
-                        current: 500.00,
-                        suggested: 425.00,
-                        percentage: 15,
-                      },
-                      {
-                        category: 'Alimentação',
-                        current: 1200.00,
-                        suggested: 1100.00,
-                        percentage: 8,
-                      },
-                      {
-                        category: 'Transporte',
-                        current: 450.00,
-                        suggested: 400.00,
-                        percentage: 11,
-                      },
-                    ],
-                  };
-                  onCreateDream(simulation);
+                  setShowCreateTrailModal(true);
                 }}
                 className="w-full bg-brand-pink text-white font-semibold py-3 rounded-card shadow-soft-shadow hover:bg-pink-600 transition-colors flex items-center justify-center gap-2"
               >
@@ -284,7 +272,10 @@ export default function SimulationForm({ onSimulate, onCreateDream }: Simulation
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setShowResult(false)}
+              onClick={() => {
+                setShowResult(false);
+                setObservations(''); // Limpar observações ao resetar
+              }}
               className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold py-3 rounded-card hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               Nova Simulação
@@ -292,6 +283,128 @@ export default function SimulationForm({ onSimulate, onCreateDream }: Simulation
           </motion.div>
         </AnimatePresence>
       )}
+
+      {/* Modal Criar Trilha com Observações */}
+      <AnimatePresence>
+        {showCreateTrailModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowCreateTrailModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-gray-800 rounded-card-lg p-6 w-full max-w-md shadow-soft-shadow"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-card bg-brand-pink/10 dark:bg-brand-pink/20 flex items-center justify-center">
+                    <Target className="w-5 h-5 text-brand-pink" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    Criar Trilha no Mapa de Sonhos
+                  </h3>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setShowCreateTrailModal(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </motion.button>
+              </div>
+
+              {/* Campo de Observações */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Observações para a IA (opcional)
+                </label>
+                <textarea
+                  value={observations}
+                  onChange={(e) => setObservations(e.target.value)}
+                  placeholder="Ex: Não posso reduzir tanto com essa categoria de transporte"
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-card border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-pink focus:border-transparent resize-none"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Informe ajustes ou restrições que a IA deve considerar ao criar sua trilha
+                </p>
+              </div>
+
+              {/* Botões */}
+              <div className="flex flex-col gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    const simulation: SimulationGoal = {
+                      id: Date.now().toString(),
+                      title: goalTitle,
+                      targetAmount,
+                      deadline,
+                      monthlySavings: calculateSavings(),
+                      insights: [
+                        `Comandante, se reduzirmos 15% do Lazer, antecipamos sua meta em 2 meses.`,
+                        `Com o seu fluxo atual, você pode atingir este objetivo em ${deadline} meses.`,
+                      ],
+                      suggestedCuts: [
+                        {
+                          category: 'Lazer',
+                          current: 500.00,
+                          suggested: 425.00,
+                          percentage: 15,
+                        },
+                        {
+                          category: 'Alimentação',
+                          current: 1200.00,
+                          suggested: 1100.00,
+                          percentage: 8,
+                        },
+                        {
+                          category: 'Transporte',
+                          current: 450.00,
+                          suggested: 400.00,
+                          percentage: 11,
+                        },
+                      ],
+                    };
+                    onCreateDream?.(simulation, observations || undefined);
+                    setShowCreateTrailModal(false);
+                    setObservations('');
+                  }}
+                  className="w-full bg-brand-pink text-white font-semibold py-3 rounded-card shadow-soft-shadow hover:bg-pink-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Target className="w-5 h-5" />
+                  Criar Trilha
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    // Gerar nova simulação considerando as observações
+                    handleSimulate();
+                    setShowCreateTrailModal(false);
+                    // As observações serão mantidas para quando criar a trilha
+                  }}
+                  className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold py-3 rounded-card hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                  Gerar Nova Simulação
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

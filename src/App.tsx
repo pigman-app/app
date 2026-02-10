@@ -10,8 +10,14 @@ import Dreams from './pages/Dreams';
 import Settings from './pages/Settings';
 import Chat from './pages/Chat';
 import Missions from './pages/Missions';
+import Recurrences from './pages/Recurrences';
+import Budgets from './pages/Budgets';
+import PigmanTips from './pages/PigmanTips';
+import BankConnections from './pages/BankConnections';
+import BankStatements from './pages/BankStatements';
+import Transactions from './pages/Transactions';
 
-type Page = 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions';
+type Page = 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
 
 // Função para verificar autenticação
 const checkAuthentication = (): boolean => {
@@ -88,6 +94,18 @@ function App() {
         return <Settings />;
       case 'missions':
         return <Missions />;
+      case 'recurrences':
+        return <Recurrences />;
+      case 'budgets':
+        return <Budgets />;
+      case 'tips':
+        return <PigmanTips />;
+      case 'bankConnections':
+        return <BankConnections />;
+      case 'bankStatements':
+        return <BankStatements />;
+      case 'transactions':
+        return <Transactions />;
       default:
         return <Home onNavigate={setCurrentPage} />;
     }

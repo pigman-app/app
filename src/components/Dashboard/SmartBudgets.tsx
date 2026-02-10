@@ -1,8 +1,12 @@
 import { motion } from 'framer-motion';
-import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 import { budgetsData, getBudgetStatus, getBudgetColor } from '../../mocks/budgets';
 
-export default function SmartBudgets() {
+interface SmartBudgetsProps {
+  onManage?: () => void;
+}
+
+export default function SmartBudgets({ onManage }: SmartBudgetsProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -165,9 +169,29 @@ export default function SmartBudgets() {
           );
         })}
       </div>
+
+      {/* Botão Gerenciar */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="mt-6"
+      >
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => onManage?.()}
+          className="w-full bg-brand-pink text-white font-semibold py-3 rounded-card flex items-center justify-center gap-2 shadow-soft-shadow hover:bg-pink-600 transition-colors"
+        >
+          Gerenciar
+          <ArrowRight className="w-4 h-4" />
+        </motion.button>
+      </motion.div>
     </motion.div>
   );
 }
+
+
 
 
 

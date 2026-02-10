@@ -41,13 +41,13 @@ export default function Chat({ onNavigate }: ChatProps) {
   };
 
   return (
-    <div className="h-full flex flex-col px-4 pt-4">
+    <div className="h-full flex flex-col">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center justify-between mb-4 flex-shrink-0"
+        className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0"
       >
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -62,8 +62,8 @@ export default function Chat({ onNavigate }: ChatProps) {
         </div>
       </motion.div>
 
-      {/* Chat Interface - Full Screen */}
-      <div className="flex-1 flex flex-col min-h-0" style={{ height: 'calc(100vh - 12rem)' }}>
+      {/* Chat Interface - Full Screen com input fixo */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <ChatInterface 
           messages={messages} 
           onSendMessage={handleSendMessage}

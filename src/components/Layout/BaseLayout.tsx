@@ -1,7 +1,8 @@
 import { ReactNode, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Home, Brain, TrendingUp, User, Target } from 'lucide-react';
+import { Home, Brain, TrendingUp, User, MessageCircle } from 'lucide-react';
 import HamburgerMenu from './HamburgerMenu';
+import FloatingActionButton from '../FloatingActionButton/FloatingActionButton';
 
 // Função para verificar autenticação
 const checkAuthentication = (): boolean => {
@@ -28,14 +29,14 @@ const checkAuthentication = (): boolean => {
 
 interface BaseLayoutProps {
   children: ReactNode;
-  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions';
-  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions') => void;
+  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
+  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions') => void;
 }
 
 const navigationItems = [
   { id: 'home', icon: Home, label: 'Início', page: 'home' as const },
   { id: 'strategy', icon: Brain, label: 'Estratégia', page: 'strategy' as const },
-  { id: 'missions', icon: Target, label: 'Missões', page: 'missions' as const },
+  { id: 'chat', icon: MessageCircle, label: 'Chat', page: 'chat' as const },
   { id: 'patrimony', icon: TrendingUp, label: 'Patrimônio', page: 'patrimony' as const },
   { id: 'profile', icon: User, label: 'Perfil', page: 'profile' as const },
 ];
@@ -74,49 +75,32 @@ export default function BaseLayout({ children, currentPage = 'home', onNavigate 
 
         {/* Main Content Area */}
         <main className={`flex-1 pb-20 overflow-y-auto overflow-x-hidden ${
-          currentPage === 'chat' ? 'px-0 pt-0' : 'px-4 pt-4'
+          currentPage === 'chat' ? 'px-0 pt-0' : 'px-4 pt-2'
         }`}>
           <div className={`max-w-full ${currentPage === 'chat' ? 'h-full' : ''}`}>
             {children}
           </div>
         </main>
 
+        {/* Floating Action Button */}
+        <FloatingActionButton onNavigate={onNavigate} />
+
+        {/* Floating Action Button */}
+        <FloatingActionButton onNavigate={onNavigate} />
+
         {/* Bottom Navigation Bar */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-bg-dark border-t border-gray-200 dark:border-gray-700 shadow-soft z-30">
+        <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-bg-dark border-t border-gray-200 dark:border-gray-700 shadow-soft z-50">
           <div className="container-mobile">
-            <div className="flex justify-around items-center h-16">
+            <div className="flex items-center h-16 relative">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentPage === item.page;
                 
                 return (
-                  <motion.button
-                    key={item.id}
-                    className="flex flex-col items-center justify-center gap-1 flex-1 h-full relative"
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={item.label}
-                    onClick={() => onNavigate?.(item.page)}
-                  >
-                    <Icon
-                      size={22}
-                      className={`transition-colors ${
-                        isActive
-                          ? 'text-pig dark:text-pig'
-                          : 'text-gray-400 dark:text-gray-500'
-                      }`}
-                    />
-                    <span
-                      className={`text-[10px] font-medium transition-colors ${
-                        isActive
-                          ? 'text-pig dark:text-pig'
-                          : 'text-gray-400 dark:text-gray-500'
-                      }`}
-                    >
-                      {item.label}
-                    </span>
+                  <div key={item.id} className="flex-1 h-full relative">
                     {isActive && (
                       <motion.div
-                        className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-pig rounded-b-full"
+                        className="absolute top-0 left-0 right-0 mx-auto w-12 h-1 bg-pig rounded-b-full z-20"
                         layoutId="activeTab"
                         initial={false}
                         transition={{
@@ -126,7 +110,31 @@ export default function BaseLayout({ children, currentPage = 'home', onNavigate 
                         }}
                       />
                     )}
-                  </motion.button>
+                    <motion.button
+                      className="flex flex-col items-center justify-center gap-1 w-full h-full relative z-10"
+                      whileTap={{ scale: 0.95 }}
+                      aria-label={item.label}
+                      onClick={() => onNavigate?.(item.page)}
+                    >
+                      <Icon
+                        size={22}
+                        className={`transition-colors ${
+                          isActive
+                            ? 'text-pig dark:text-pig'
+                            : 'text-gray-400 dark:text-gray-500'
+                        }`}
+                      />
+                      <span
+                        className={`text-[10px] font-medium transition-colors ${
+                          isActive
+                            ? 'text-pig dark:text-pig'
+                            : 'text-gray-400 dark:text-gray-500'
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                    </motion.button>
+                  </div>
                 );
               })}
             </div>

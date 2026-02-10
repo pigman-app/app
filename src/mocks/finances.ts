@@ -4,6 +4,9 @@ export interface Asset {
   value: number;
   type: 'emergency' | 'investment' | 'property' | 'other';
   icon: string;
+  description?: string;
+  date?: string;
+  notes?: string;
 }
 
 export interface Liability {
@@ -12,6 +15,12 @@ export interface Liability {
   value: number;
   type: 'loan' | 'credit-card' | 'financing' | 'other';
   icon: string;
+  description?: string;
+  date?: string;
+  notes?: string;
+  interestRate?: number;
+  installments?: number;
+  totalInstallments?: number;
 }
 
 export interface NetWorthData {

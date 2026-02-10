@@ -50,13 +50,12 @@ export default function Header({ userName, elo, xp, xpToNext, streak }: HeaderPr
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
-        className="flex flex-col items-end gap-1"
+        className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-yellow/20 to-orange-500/20 border-2 border-brand-yellow flex flex-col items-center justify-center shadow-soft-shadow"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
-        <div className="flex items-center gap-1 bg-brand-yellow/10 dark:bg-brand-yellow/20 px-3 py-1.5 rounded-full">
-          <Flame className="w-4 h-4 text-brand-yellow" fill="currentColor" />
-          <span className="text-sm font-bold text-brand-yellow">{streak}</span>
-        </div>
-        <span className="text-xs text-gray-500 dark:text-gray-400">Ofensiva</span>
+        <Flame className="w-6 h-6 text-brand-yellow" fill="currentColor" />
+        <span className="text-xs font-bold text-brand-yellow leading-none mt-0.5">{streak}</span>
       </motion.div>
     </motion.div>
   );

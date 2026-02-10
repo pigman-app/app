@@ -3,7 +3,6 @@ import { CreditCard, ArrowRight } from 'lucide-react';
 import { dashboardData } from '../mocks/userDashboard';
 import { creditCardsData } from '../mocks/finances';
 import Header from '../components/Dashboard/Header';
-import StreakCard from '../components/Dashboard/StreakCard';
 import BalanceScenarioCard from '../components/Dashboard/BalanceScenarioCard';
 import SmartBudgets from '../components/Dashboard/SmartBudgets';
 import PendingExpensesCard from '../components/Dashboard/PendingExpensesCard';
@@ -11,7 +10,7 @@ import ExpensesDonutChart from '../components/Dashboard/ExpensesDonutChart';
 import DreamsMap from '../components/Dreams/DreamsMap';
 
 interface HomeProps {
-  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams') => void;
+  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'budgets' | 'recurrences') => void;
 }
 
 export default function Home({ onNavigate }: HomeProps) {
@@ -19,6 +18,45 @@ export default function Home({ onNavigate }: HomeProps) {
   
   const totalCardsLimit = creditCardsData.reduce((sum, card) => sum + card.limit, 0);
   const totalCardsUsed = creditCardsData.reduce((sum, card) => sum + card.used, 0);
+
+  // Calcular dados de recorrências do localStorage
+  const getRecurrencesData = () => {
+    try {
+      const saved = localStorage.getItem('pigman_recurrences');
+      if (saved) {
+        const data = JSON.parse(saved);
+        const recurrences = data.recurrences || [];
+        
+        // Calcular total mensal considerando todas as frequências
+        const monthlyTotal = recurrences
+          .filter((r: any) => r.frequency === 'monthly')
+          .reduce((sum: number, r: any) => sum + (r.amount || 0), 0);
+        
+        const weeklyTotal = recurrences
+          .filter((r: any) => r.frequency === 'weekly')
+          .reduce((sum: number, r: any) => sum + (r.amount || 0), 0) * 4.33; // Aproximação mensal
+        
+        const yearlyTotal = recurrences
+          .filter((r: any) => r.frequency === 'yearly')
+          .reduce((sum: number, r: any) => sum + (r.amount || 0), 0) / 12; // Aproximação mensal
+        
+        return {
+          count: recurrences.length,
+          total: monthlyTotal + weeklyTotal + yearlyTotal,
+        };
+      }
+    } catch {
+      // Fallback para dados mock
+    }
+    
+    // Dados mock padrão (baseado nas recorrências da página)
+    return {
+      count: 4,
+      total: 10200.00, // Salário (5000) + Aluguel (1500) + Cartão (1200) + Financiamento (2500)
+    };
+  };
+
+  const recurrencesData = getRecurrencesData();
 
   const handleViewDreams = () => {
     onNavigate?.('dreams');
@@ -30,7 +68,7 @@ export default function Home({ onNavigate }: HomeProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* 1. Header com Avatar Pig-Man e Ofensiva */}
       <Header
         userName="João Silva"
@@ -40,22 +78,20 @@ export default function Home({ onNavigate }: HomeProps) {
         streak={pigMan.streak}
       />
 
-      {/* 2. Streak Card (grande e destacado) - NOVO */}
-      <StreakCard streak={pigMan.streak} />
-
-      {/* 3. Saldo, Receitas e Despesas com Toggle de Cenário */}
+      {/* 2. Saldo, Receitas e Despesas com Toggle de Cenário */}
       <BalanceScenarioCard
         real={real}
         predicted={predicted}
       />
 
       {/* 4. Smart Budgets (alertas por cores) - NOVO */}
-      <SmartBudgets />
+      <SmartBudgets onManage={() => onNavigate?.('budgets')} />
 
-      {/* 5. Despesas Pendentes */}
+      {/* 5. Recorrências */}
       <PendingExpensesCard
-        count={pendingExpenses.count}
-        total={pendingExpenses.total}
+        count={recurrencesData.count}
+        total={recurrencesData.total}
+        onNavigate={() => onNavigate?.('recurrences')}
       />
 
       {/* 6. Gráfico de Rosca - Despesas por Categoria */}

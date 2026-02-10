@@ -18,10 +18,14 @@ export default function StrategyScreen({ onNavigate }: StrategyScreenProps) {
     setTimeout(() => setPigManMood('thinking'), 3000);
   };
 
-  const handleCreateDream = (goal: SimulationGoal) => {
+  const handleCreateDream = (goal: SimulationGoal, observations?: string) => {
     // Aqui você adicionaria o sonho ao mapa de sonhos
     // Por enquanto, apenas navega para a página de sonhos
     console.log('Criando sonho:', goal);
+    if (observations) {
+      console.log('Observações da IA:', observations);
+      // Aqui você pode processar as observações e ajustar a simulação
+    }
     onNavigate?.('dreams');
   };
 

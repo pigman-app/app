@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
-import { CreditCard, ArrowRight } from 'lucide-react';
+import { Repeat, ArrowRight } from 'lucide-react';
 
 interface PendingExpensesCardProps {
   count: number;
   total: number;
+  onNavigate?: () => void;
 }
 
-export default function PendingExpensesCard({ count, total }: PendingExpensesCardProps) {
+export default function PendingExpensesCard({ count, total, onNavigate }: PendingExpensesCardProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -25,14 +26,14 @@ export default function PendingExpensesCard({ count, total }: PendingExpensesCar
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-card bg-brand-pink/10 dark:bg-brand-pink/20 flex items-center justify-center">
-            <CreditCard className="w-6 h-6 text-brand-pink" />
+            <Repeat className="w-6 h-6 text-brand-pink" />
           </div>
           <div>
             <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-              Despesas Pendentes
+              Recorrências
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {count} transações
+              {count} recorrências ativas
             </p>
           </div>
         </div>
@@ -43,11 +44,11 @@ export default function PendingExpensesCard({ count, total }: PendingExpensesCar
           {formatCurrency(total)}
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          Total a verificar
+          Total mensal recorrente
         </p>
       </div>
 
-      {/* Ícones de bancos (placeholder) */}
+      {/* Ícones de categorias (placeholder) */}
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
           <span className="text-xs font-bold text-blue-600 dark:text-blue-400">I</span>
@@ -65,6 +66,7 @@ export default function PendingExpensesCard({ count, total }: PendingExpensesCar
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={() => onNavigate?.()}
         className="w-full bg-brand-pink text-white font-semibold py-3 rounded-card flex items-center justify-center gap-2 shadow-soft-shadow hover:bg-pink-600 transition-colors"
       >
         Verificar

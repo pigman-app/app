@@ -44,9 +44,9 @@ export default function ChatInterface({ messages, onSendMessage, onCreateDream, 
       transition={{ duration: 0.5, delay: 0.2 }}
       className={`flex-1 flex flex-col ${
         fullScreen 
-          ? 'bg-transparent p-0' 
+          ? 'bg-transparent p-0 h-full' 
           : 'bg-white dark:bg-gray-800 rounded-card-lg p-4 md:p-6 shadow-soft-shadow'
-      } min-h-0`}
+      } min-h-0 overflow-hidden`}
     >
       {/* Header (opcional) */}
       {showHeader && (
@@ -68,8 +68,8 @@ export default function ChatInterface({ messages, onSendMessage, onCreateDream, 
         </div>
       )}
 
-      {/* Messages Container - Ocupa todo espaço disponível */}
-      <div className="flex-1 overflow-y-auto mb-4 space-y-4 pr-2 min-h-0">
+      {/* Messages Container - Ocupa espaço disponível com scroll e padding para o input fixo */}
+      <div className="flex-1 overflow-y-auto px-4 space-y-4 pr-2 min-h-0 pb-24">
         {messages.map((message, index) => {
           const isUser = message.type === 'user';
           const structured = !isUser ? parseStructuredResponse(message.content) : null;
@@ -174,31 +174,35 @@ export default function ChatInterface({ messages, onSendMessage, onCreateDream, 
         })}
       </div>
 
-      {/* Input Area - Fixo no bottom */}
-      <div className="flex items-center gap-2 flex-shrink-0 pt-2 border-t border-gray-200 dark:border-gray-700">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-        >
-          <Mic className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        </motion.button>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Pergunte ao Pig-Man..."
-          className="flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-pink focus:border-transparent"
-        />
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={handleSend}
-          className="w-10 h-10 rounded-full bg-brand-pink flex items-center justify-center hover:bg-pink-600 transition-colors"
-        >
-          <Send className="w-5 h-5 text-white" />
-        </motion.button>
+      {/* Input Area - Fixo acima do menu de navegação */}
+      <div className="fixed bottom-16 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg">
+        <div className="container-mobile px-4 py-3">
+          <div className="flex items-center gap-2">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              <Mic className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            </motion.button>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              placeholder="Pergunte ao Pig-Man..."
+              className="flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-pink focus:border-transparent"
+            />
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleSend}
+              className="w-10 h-10 rounded-full bg-brand-pink flex items-center justify-center hover:bg-pink-600 transition-colors"
+            >
+              <Send className="w-5 h-5 text-white" />
+            </motion.button>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

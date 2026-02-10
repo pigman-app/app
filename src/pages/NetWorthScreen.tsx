@@ -1,17 +1,118 @@
 import { motion } from 'framer-motion';
-import { TrendingUp } from 'lucide-react';
-import { netWorthData } from '../mocks/finances';
+import { TrendingUp, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { netWorthData as initialNetWorthData, Asset, Liability, NetWorthData } from '../mocks/finances';
 import NetWorthChart from '../components/NetWorth/NetWorthChart';
 import AssetLiabilityItem from '../components/NetWorth/AssetLiabilityItem';
 import EloEvolutionCard from '../components/NetWorth/EloEvolutionCard';
+import AddEditModal from '../components/NetWorth/AddEditModal';
+import ViewDetailModal from '../components/NetWorth/ViewDetailModal';
 
 export default function NetWorthScreen() {
+  const [netWorthData, setNetWorthData] = useState<NetWorthData>(() => {
+    try {
+      const saved = localStorage.getItem('pigman_networth');
+      if (saved) {
+        const data = JSON.parse(saved);
+        // Recalcular net worth
+        data.netWorth = data.assets.reduce((sum: number, asset: Asset) => sum + asset.value, 0) -
+                        data.liabilities.reduce((sum: number, liability: Liability) => sum + liability.value, 0);
+        return data;
+      }
+    } catch {
+      // Fallback para dados iniciais
+    }
+    return initialNetWorthData;
+  });
+
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<Asset | Liability | null>(null);
+  const [viewingItem, setViewingItem] = useState<Asset | Liability | null>(null);
+  const [viewingType, setViewingType] = useState<'asset' | 'liability'>('asset');
+  const [addModalType, setAddModalType] = useState<'asset' | 'liability' | undefined>(undefined);
+
+  useEffect(() => {
+    // Salvar no localStorage sempre que houver mudanças
+    localStorage.setItem('pigman_networth', JSON.stringify(netWorthData));
+  }, [netWorthData]);
+
   const assetsTotal = netWorthData.assets.reduce((sum, asset) => sum + asset.value, 0);
   const liabilitiesTotal = netWorthData.liabilities.reduce((sum, liability) => sum + liability.value, 0);
   
   // Calcular progresso para evolução do Elo (exemplo: 0-100% baseado no net worth)
   // Assumindo que R$ 10.000+ leva para Prata
   const eloProgress = Math.min(100, (netWorthData.netWorth / 10000) * 100);
+
+  const handleSave = (item: Asset | Liability, type: 'asset' | 'liability') => {
+    if (editingItem) {
+      // Editar existente - recalcular net worth
+      const oldValue = editingItem.value;
+      const newValue = item.value;
+      const valueDiff = type === 'asset' ? (newValue - oldValue) : (oldValue - newValue);
+      
+      if (type === 'asset') {
+        setNetWorthData(prev => ({
+          ...prev,
+          assets: prev.assets.map(a => a.id === item.id ? item as Asset : a),
+          netWorth: prev.netWorth + valueDiff
+        }));
+      } else {
+        setNetWorthData(prev => ({
+          ...prev,
+          liabilities: prev.liabilities.map(l => l.id === item.id ? item as Liability : l),
+          netWorth: prev.netWorth + valueDiff
+        }));
+      }
+      setEditingItem(null);
+    } else {
+      // Adicionar novo
+      if (type === 'asset') {
+        setNetWorthData(prev => ({
+          ...prev,
+          assets: [...prev.assets, item as Asset],
+          netWorth: prev.netWorth + item.value
+        }));
+      } else {
+        setNetWorthData(prev => ({
+          ...prev,
+          liabilities: [...prev.liabilities, item as Liability],
+          netWorth: prev.netWorth - item.value
+        }));
+      }
+    }
+  };
+
+  const handleEdit = (item: Asset | Liability) => {
+    setEditingItem(item);
+    setShowAddModal(true);
+  };
+
+  const handleView = (item: Asset | Liability) => {
+    setViewingItem(item);
+    setViewingType(netWorthData.assets.some(a => a.id === item.id) ? 'asset' : 'liability');
+    setShowViewModal(true);
+  };
+
+  const handleDelete = (id: string, type: 'asset' | 'liability') => {
+    if (confirm('Tem certeza que deseja excluir este item?')) {
+      if (type === 'asset') {
+        const asset = netWorthData.assets.find(a => a.id === id);
+        setNetWorthData(prev => ({
+          ...prev,
+          assets: prev.assets.filter(a => a.id !== id),
+          netWorth: prev.netWorth - (asset?.value || 0)
+        }));
+      } else {
+        const liability = netWorthData.liabilities.find(l => l.id === id);
+        setNetWorthData(prev => ({
+          ...prev,
+          liabilities: prev.liabilities.filter(l => l.id !== id),
+          netWorth: prev.netWorth + (liability?.value || 0)
+        }));
+      }
+    }
+  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -92,9 +193,24 @@ export default function NetWorthScreen() {
 
       {/* Lista de Ativos */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Ativos
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Ativos
+          </h2>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setEditingItem(null);
+              setAddModalType('asset');
+              setShowAddModal(true);
+            }}
+            className="px-3 py-1.5 rounded-card bg-brand-green text-white text-sm font-semibold flex items-center gap-1.5 shadow-soft-shadow hover:bg-green-600 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Adicionar
+          </motion.button>
+        </div>
         <div className="space-y-3">
           {netWorthData.assets.map((asset, index) => (
             <AssetLiabilityItem
@@ -102,16 +218,38 @@ export default function NetWorthScreen() {
               item={asset}
               index={index}
               type="asset"
+              onEdit={handleEdit}
+              onView={handleView}
             />
           ))}
+          {netWorthData.assets.length === 0 && (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <p>Nenhum ativo cadastrado</p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Lista de Passivos */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Passivos
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Passivos
+          </h2>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setEditingItem(null);
+              setAddModalType('liability');
+              setShowAddModal(true);
+            }}
+            className="px-3 py-1.5 rounded-card bg-brand-pink text-white text-sm font-semibold flex items-center gap-1.5 shadow-soft-shadow hover:bg-pink-600 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Adicionar
+          </motion.button>
+        </div>
         <div className="space-y-3">
           {netWorthData.liabilities.map((liability, index) => (
             <AssetLiabilityItem
@@ -119,10 +257,45 @@ export default function NetWorthScreen() {
               item={liability}
               index={index}
               type="liability"
+              onEdit={handleEdit}
+              onView={handleView}
             />
           ))}
+          {netWorthData.liabilities.length === 0 && (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <p>Nenhum passivo cadastrado</p>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Modais */}
+      <AddEditModal
+        isOpen={showAddModal}
+        onClose={() => {
+          setShowAddModal(false);
+          setEditingItem(null);
+          setAddModalType(undefined);
+        }}
+        onSave={handleSave}
+        item={editingItem || undefined}
+        type={editingItem 
+          ? (netWorthData.assets.some(a => a.id === editingItem.id) ? 'asset' : 'liability')
+          : addModalType
+        }
+      />
+
+      {viewingItem && (
+        <ViewDetailModal
+          isOpen={showViewModal}
+          onClose={() => {
+            setShowViewModal(false);
+            setViewingItem(null);
+          }}
+          item={viewingItem}
+          type={viewingType}
+        />
+      )}
     </div>
   );
 }

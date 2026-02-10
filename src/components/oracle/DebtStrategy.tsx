@@ -85,11 +85,11 @@ export default function DebtStrategy({ data }: DebtStrategyProps) {
         <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
           Timeline de Quitação:
         </h4>
-        <div className="relative">
-          {/* Linha da Timeline */}
+        <div className="relative pl-1">
+          {/* Linha da Timeline - Posicionada em 16px da esquerda do container */}
           <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600" />
           
-          <div className="space-y-6 pl-12">
+          <div className="space-y-6">
             {data.debts
               .sort((a, b) => {
                 const orderA = data.recommendedOrder.indexOf(a.name);
@@ -109,10 +109,10 @@ export default function DebtStrategy({ data }: DebtStrategyProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.15 }}
-                    className="relative"
+                    className="relative pl-10"
                   >
-                    {/* Ponto na Timeline */}
-                    <div className="absolute -left-8 top-2 w-8 h-8 rounded-full bg-brand-pink flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-soft">
+                    {/* Ponto na Timeline - Centralizado exatamente na linha (left-4 = 16px do container pai, então -translate-x-1/2 centraliza o ícone de 32px) */}
+                    <div className="absolute left-4 top-2 w-8 h-8 -translate-x-1/2 rounded-full bg-brand-pink flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-soft z-10">
                       <CheckCircle2 className="w-4 h-4 text-white" />
                     </div>
 

@@ -9,22 +9,28 @@ import {
   Settings,
   MessageCircle,
   Target,
+  Repeat,
+  DollarSign,
+  Lightbulb,
+  Link,
+  FileText,
   X,
-  Menu
+  Menu,
+  Receipt
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface HamburgerMenuProps {
-  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions';
-  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions') => void;
+  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
+  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions') => void;
 }
 
 interface MenuItem {
   id: string;
   icon: typeof Home;
   label: string;
-  page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions';
+  page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
   category: 'main' | 'secondary';
   color: string;
 }
@@ -40,6 +46,12 @@ const menuItems: MenuItem[] = [
   // Secundárias
   { id: 'cards', icon: CreditCard, label: 'Cartões', page: 'cards', category: 'secondary', color: 'text-gray-600 dark:text-gray-400' },
   { id: 'dreams', icon: Sparkles, label: 'Sonhos', page: 'dreams', category: 'secondary', color: 'text-brand-pink' },
+  { id: 'recurrences', icon: Repeat, label: 'Recorrências', page: 'recurrences', category: 'secondary', color: 'text-brand-pink' },
+  { id: 'budgets', icon: DollarSign, label: 'Categorias/Orçamentos', page: 'budgets', category: 'secondary', color: 'text-brand-pink' },
+  { id: 'tips', icon: Lightbulb, label: 'Dicas do Pigman', page: 'tips', category: 'secondary', color: 'text-brand-yellow' },
+  { id: 'transactions', icon: Receipt, label: 'Transações', page: 'transactions', category: 'secondary', color: 'text-brand-pink' },
+  { id: 'bankConnections', icon: Link, label: 'Conexões Bancárias', page: 'bankConnections', category: 'secondary', color: 'text-brand-pink' },
+  { id: 'bankStatements', icon: FileText, label: 'Adição por meio de extrato', page: 'bankStatements', category: 'secondary', color: 'text-brand-pink' },
   { id: 'settings', icon: Settings, label: 'Configurações', page: 'settings', category: 'secondary', color: 'text-gray-600 dark:text-gray-400' },
 ];
 
