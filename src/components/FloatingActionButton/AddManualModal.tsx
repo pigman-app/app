@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { X, TrendingUp, TrendingDown, Calendar, Repeat, DollarSign, Tag } from 'lucide-react';
+import { X, TrendingUp, TrendingDown, Calendar, Repeat } from 'lucide-react';
 
 interface AddManualModalProps {
   isOpen: boolean;

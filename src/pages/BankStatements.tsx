@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FileText, Upload, CheckCircle, XCircle, Calendar, DollarSign } from 'lucide-react';
+import { FileText, Upload, CheckCircle, Calendar, DollarSign } from 'lucide-react';
 import ImportHub from '../containers/ImportHub';
 
 export default function BankStatements() {

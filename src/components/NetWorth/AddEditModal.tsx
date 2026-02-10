@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { X, Plus, TrendingUp, TrendingDown, PiggyBank, Home, CreditCard, DollarSign, Building2 } from 'lucide-react';
+import { X, TrendingUp, TrendingDown, PiggyBank, Home, CreditCard, DollarSign, Building2 } from 'lucide-react';
 import { Asset, Liability } from '../../mocks/finances';
 
 interface AddEditModalProps {

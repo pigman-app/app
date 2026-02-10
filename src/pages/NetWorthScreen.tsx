@@ -94,26 +94,6 @@ export default function NetWorthScreen() {
     setShowViewModal(true);
   };
 
-  const handleDelete = (id: string, type: 'asset' | 'liability') => {
-    if (confirm('Tem certeza que deseja excluir este item?')) {
-      if (type === 'asset') {
-        const asset = netWorthData.assets.find(a => a.id === id);
-        setNetWorthData(prev => ({
-          ...prev,
-          assets: prev.assets.filter(a => a.id !== id),
-          netWorth: prev.netWorth - (asset?.value || 0)
-        }));
-      } else {
-        const liability = netWorthData.liabilities.find(l => l.id === id);
-        setNetWorthData(prev => ({
-          ...prev,
-          liabilities: prev.liabilities.filter(l => l.id !== id),
-          netWorth: prev.netWorth + (liability?.value || 0)
-        }));
-      }
-    }
-  };
-
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',

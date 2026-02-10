@@ -190,7 +190,7 @@ export default function BalanceScenarioCard({
 
         {/* Indicadores de Página */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 pb-2">
-          {cards.map((card, index) => (
+          {cards.map((card) => (
             <button
               key={card.type}
               onClick={() => setCurrentCard(card.type)}

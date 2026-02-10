@@ -642,7 +642,12 @@ export default function Budgets() {
                         editingBudget.color === color
                           ? 'border-gray-900 dark:border-white scale-110'
                           : 'border-gray-300 dark:border-gray-600'
-                      } ${getColorClasses(color)}`}
+                      } ${
+                        color === 'green' ? 'bg-green-500' :
+                        color === 'pink' ? 'bg-pink-500' :
+                        color === 'yellow' ? 'bg-yellow-500' :
+                        'bg-blue-500'
+                      }`}
                     />
                   ))}
                 </div>

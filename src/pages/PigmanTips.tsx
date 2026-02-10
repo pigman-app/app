@@ -173,17 +173,6 @@ export default function PigmanTips() {
     return labels[category];
   };
 
-  const getCategoryColor = (category: TipCategory) => {
-    const colors: Record<TipCategory, string> = {
-      all: 'bg-brand-pink/10 text-brand-pink border-brand-pink/20',
-      income: 'bg-brand-green/10 text-brand-green border-brand-green/20',
-      savings: 'bg-brand-pink/10 text-brand-pink border-brand-pink/20',
-      investments: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-      debts: 'bg-brand-yellow/10 text-brand-yellow border-brand-yellow/20',
-    };
-    return colors[category];
-  };
-
   const filteredTips = selectedCategory === 'all' 
     ? allTips 
     : allTips.filter(tip => tip.category === selectedCategory);

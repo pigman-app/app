@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Repeat, Plus, TrendingUp, TrendingDown, CreditCard, DollarSign, FileText, ChevronLeft, ChevronRight, CheckCircle, Clock } from 'lucide-react';
 import { useState, useMemo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts';
 
 type RecurrenceType = 'income' | 'fixed' | 'credit-card' | 'loan';
 type TabType = 'all' | 'income' | 'expenses';
@@ -26,9 +26,9 @@ interface Recurrence {
 export default function Recurrences() {
   const [activeTab, setActiveTab] = useState<TabType>('all');
   const [expenseSubTab, setExpenseSubTab] = useState<ExpenseSubTab | null>(null);
-  const [paymentFilter, setPaymentFilter] = useState<'all' | 'pending' | 'paid'>('all');
+  const [paymentFilter] = useState<'all' | 'pending' | 'paid'>('all');
   const [showForm, setShowForm] = useState(false);
-  const [selectedType, setSelectedType] = useState<RecurrenceType | null>(null);
+  const [, setSelectedType] = useState<RecurrenceType | null>(null);
   const [chartPage, setChartPage] = useState(0); // 0 = meses 1-6, 1 = meses 7-12
 
   // Carregar dados do localStorage
@@ -306,40 +306,7 @@ export default function Recurrences() {
     return pageData;
   };
 
-  // Calcular total do período atual (6 meses)
-  const getPeriodTotal = () => {
-    const startIndex = chartPage * 6;
-    const endIndex = startIndex + 6;
-    const pageData = chartData.slice(startIndex, endIndex);
-    
-    if (activeTab === 'all') {
-      const totalReceitas = pageData.reduce((sum, d) => sum + d.Receitas, 0);
-      const totalGastos = pageData.reduce((sum, d) => sum + d['Gastos Fixos'] + d.Cartões + d.Empréstimos, 0);
-      return { receitas: totalReceitas, gastos: totalGastos };
-    }
-    
-    if (activeTab === 'income') {
-      const totalReceitas = pageData.reduce((sum, d) => sum + d.Receitas, 0);
-      return { receitas: totalReceitas, gastos: 0 };
-    }
-    
-    if (activeTab === 'expenses') {
-      const totalGastos = pageData.reduce((sum, d) => {
-        if (expenseSubTab === null) {
-          return sum + d['Gastos Fixos'] + d.Cartões + d.Empréstimos;
-        }
-        if (expenseSubTab === 'fixed') return sum + d['Gastos Fixos'];
-        if (expenseSubTab === 'credit-card') return sum + d.Cartões;
-        if (expenseSubTab === 'loan') return sum + d.Empréstimos;
-        return sum;
-      }, 0);
-      return { receitas: 0, gastos: totalGastos };
-    }
-    
-    return { receitas: 0, gastos: 0 };
-  };
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload;
       return (

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Link, Plus, Trash2, RefreshCw, CheckCircle, XCircle, Eye, EyeOff } from 'lucide-react';
-import { BankAccount, mockBankAccounts, bankNames, bankLogos } from '../mocks/bankConnections';
+import { BankAccount, mockBankAccounts, bankLogos } from '../mocks/bankConnections';
 import BankConnectionModal from '../components/BankConnections/BankConnectionModal';
 
 export default function BankConnections() {

@@ -84,9 +84,6 @@ export default function BaseLayout({ children, currentPage = 'home', onNavigate 
         {/* Floating Action Button */}
         <FloatingActionButton onNavigate={onNavigate} />
 
-        {/* Floating Action Button */}
-        <FloatingActionButton onNavigate={onNavigate} />
-
         {/* Bottom Navigation Bar */}
         <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-bg-dark border-t border-gray-200 dark:border-gray-700 shadow-soft z-50">
           <div className="container-mobile">

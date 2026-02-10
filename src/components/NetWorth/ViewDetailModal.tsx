@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, TrendingUp, TrendingDown, Calendar, FileText, Percent, Hash } from 'lucide-react';
+import { X, Calendar, FileText, Percent, Hash } from 'lucide-react';
 import { Asset, Liability } from '../../mocks/finances';
 import { PiggyBank, Home, CreditCard, DollarSign, TrendingUp as TrendingUpIcon } from 'lucide-react';
 

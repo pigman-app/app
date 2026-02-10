@@ -4,8 +4,10 @@ import { Plus, X, Sparkles, FileText, Edit, TrendingUp, TrendingDown } from 'luc
 import AddManualModal from './AddManualModal';
 import AddEditModal from '../NetWorth/AddEditModal';
 
+type PageType = 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey';
+
 interface FloatingActionButtonProps {
-  onNavigate?: (page: string) => void;
+  onNavigate?: (page: PageType) => void;
 }
 
 export default function FloatingActionButton({ onNavigate }: FloatingActionButtonProps) {

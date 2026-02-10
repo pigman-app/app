@@ -1,4 +1,4 @@
-import { BankAccount, bankLogos } from '../../mocks/bankConnections';
+import { bankLogos } from '../../mocks/bankConnections';
 
 interface BankLogoProps {
   bankCode: string;
