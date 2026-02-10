@@ -8,7 +8,7 @@ import FloatingActionButton from '../FloatingActionButton/FloatingActionButton';
 const checkAuthentication = (): boolean => {
   const isAuthenticated = localStorage.getItem('pigman_authenticated');
   const authToken = localStorage.getItem('pigman_auth_token');
-  
+
   if (!isAuthenticated || !authToken) {
     return false;
   }
@@ -16,7 +16,7 @@ const checkAuthentication = (): boolean => {
   try {
     const decoded = atob(authToken);
     const [email, password] = decoded.split(':');
-    
+
     if (email === 'app.pigman@gmail.com' && password === '#PIGMAN123') {
       return true;
     }
@@ -29,8 +29,8 @@ const checkAuthentication = (): boolean => {
 
 interface BaseLayoutProps {
   children: ReactNode;
-  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
-  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions') => void;
+  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey';
+  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey') => void;
 }
 
 const navigationItems = [
@@ -74,9 +74,8 @@ export default function BaseLayout({ children, currentPage = 'home', onNavigate 
         </header>
 
         {/* Main Content Area */}
-        <main className={`flex-1 pb-20 overflow-y-auto overflow-x-hidden ${
-          currentPage === 'chat' ? 'px-0 pt-0' : 'px-4 pt-2'
-        }`}>
+        <main className={`flex-1 pb-20 overflow-y-auto overflow-x-hidden ${currentPage === 'chat' ? 'px-0 pt-0' : 'px-4 pt-2'
+          }`}>
           <div className={`max-w-full ${currentPage === 'chat' ? 'h-full' : ''}`}>
             {children}
           </div>
@@ -95,7 +94,7 @@ export default function BaseLayout({ children, currentPage = 'home', onNavigate 
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentPage === item.page;
-                
+
                 return (
                   <div key={item.id} className="flex-1 h-full relative">
                     {isActive && (
@@ -118,18 +117,16 @@ export default function BaseLayout({ children, currentPage = 'home', onNavigate 
                     >
                       <Icon
                         size={22}
-                        className={`transition-colors ${
-                          isActive
-                            ? 'text-pig dark:text-pig'
-                            : 'text-gray-400 dark:text-gray-500'
-                        }`}
+                        className={`transition-colors ${isActive
+                          ? 'text-pig dark:text-pig'
+                          : 'text-gray-400 dark:text-gray-500'
+                          }`}
                       />
                       <span
-                        className={`text-[10px] font-medium transition-colors ${
-                          isActive
-                            ? 'text-pig dark:text-pig'
-                            : 'text-gray-400 dark:text-gray-500'
-                        }`}
+                        className={`text-[10px] font-medium transition-colors ${isActive
+                          ? 'text-pig dark:text-pig'
+                          : 'text-gray-400 dark:text-gray-500'
+                          }`}
                       >
                         {item.label}
                       </span>

@@ -16,8 +16,9 @@ import PigmanTips from './pages/PigmanTips';
 import BankConnections from './pages/BankConnections';
 import BankStatements from './pages/BankStatements';
 import Transactions from './pages/Transactions';
+import FinanceJourney from './containers/FinanceJourney';
 
-type Page = 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
+type Page = 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey';
 
 // Função para verificar autenticação
 const checkAuthentication = (): boolean => {
@@ -106,6 +107,8 @@ function App() {
         return <BankStatements />;
       case 'transactions':
         return <Transactions />;
+      case 'journey':
+        return <FinanceJourney />;
       default:
         return <Home onNavigate={setCurrentPage} />;
     }

@@ -16,21 +16,22 @@ import {
   FileText,
   X,
   Menu,
-  Receipt
+  Receipt,
+  Map
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface HamburgerMenuProps {
-  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
-  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions') => void;
+  currentPage?: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey';
+  onNavigate?: (page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey') => void;
 }
 
 interface MenuItem {
   id: string;
   icon: typeof Home;
   label: string;
-  page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions';
+  page: 'home' | 'strategy' | 'patrimony' | 'profile' | 'cards' | 'dreams' | 'settings' | 'chat' | 'missions' | 'recurrences' | 'budgets' | 'tips' | 'bankConnections' | 'bankStatements' | 'transactions' | 'journey';
   category: 'main' | 'secondary';
   color: string;
 }
@@ -39,6 +40,7 @@ const menuItems: MenuItem[] = [
   // Principais
   { id: 'home', icon: Home, label: 'Início', page: 'home', category: 'main', color: 'text-brand-pink' },
   { id: 'strategy', icon: Brain, label: 'Estratégia', page: 'strategy', category: 'main', color: 'text-brand-green' },
+  { id: 'journey', icon: Map, label: 'Jornada', page: 'journey', category: 'main', color: 'text-brand-pink' },
   { id: 'missions', icon: Target, label: 'Missões', page: 'missions', category: 'main', color: 'text-brand-yellow' },
   { id: 'chat', icon: MessageCircle, label: 'Chat', page: 'chat', category: 'main', color: 'text-brand-pink' },
   { id: 'patrimony', icon: TrendingUp, label: 'Patrimônio', page: 'patrimony', category: 'main', color: 'text-brand-yellow' },
